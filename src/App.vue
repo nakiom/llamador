@@ -4,14 +4,44 @@ import { RouterLink, RouterView } from 'vue-router'
 // import store from 'vuex'
 import { mapGetters } from 'vuex'
 import Llamados from '@/components/Llamados.vue'
-import UltimoLlamado from '@/components/UltimoLlamado.vue'
+// import UltimoLlamado from '@/components/UltimoLlamado.vue'
 </script>
+
+<template>
+    <div class="container-fluid">  
+        <div class="row">
+            <div class="col-sm-9 col-md-9 col-lg-9">
+                <h2> 🗺️Usted se encuentra en <span class="piso-syle">Piso {{piso}}</span></h2>
+            </div>
+            <div class="col-sm-3 col-md-3 col-lg-3">
+                <img src="logo.png" class="logo" alt="{{empresa}}">
+            </div>
+        </div>
+
+       <!--  <div class="row">
+            <div class="col-sm-12 col-md-12 col-lg-12">
+                <h3>Último llamado:</h3>
+                <h1 id="ultimo_llamado">{{ultimo_llamado_piso}}</h1>
+            </div> 
+        </div>
+        -->
+        <hr>
+        <Llamados/>
+    </div>
+  <RouterView />
+</template>
 
 <script>
 export default { 
+    data(){
+        return {
+            piso: '',
+            ultimo_llamado_piso: ''
+        }
+    },
     computed: {
         ...mapGetters({
-        empresa : "getEmpresa"
+            empresa : "getEmpresa",
         })
     },
     methods: {
@@ -23,39 +53,18 @@ export default {
             })
         },
         goto(name) {
-        this.$router.push({name:name})
+            this.$router.push({name:name})
         }
-    },
+    },    
     mounted () {
-        
+        const urlParams = new URLSearchParams(window.location.search);
+        this.piso = (urlParams.get("p") > 0 ) ? urlParams.get("p") : 'Debe indicar el piso en el que está instalado el televisor via URL.';
+        // this.$router.push({name:name})
+
+        console.log(this.piso)
     }
 }
 </script>
-
-<template>
-  <header>
-    <!-- <img alt="Vue logo" class="logo" src="@/assets/logo.svg" width="125" height="125" /> -->
-
-    <div class="wrapper">
-      <Llamados/>
-      <UltimoLlamado/>
-        <b-button>Button</b-button>
-          <b-button variant="success">Button</b-button>
-      <!-- <button @click="goto('about')">about</button> -->
-      <!-- <button @click="goto('home')">home</button> -->
-
-      <!-- <h3>llamados anteriores</h3> -->
-     <!--  <HelloWorld msg="empresa" />
-       <nav>
-        <RouterLink to="/">Home</RouterLink>
-        <RouterLink to="/about">About</RouterLink>
-      </nav>
-      -->
-    </div>
-  </header>
-
-  <RouterView />
-</template>
 
 <style>
 @import '@/assets/base.css';
@@ -76,6 +85,8 @@ header {
 .logo {
   display: block;
   margin: 0 auto 2rem;
+  width: 6em;
+  height: 6em;
 }
 
 a,
@@ -83,6 +94,11 @@ a,
   text-decoration: none;
   color: hsla(160, 100%, 37%, 1);
   transition: 0.4s;
+}
+
+.piso-syle {
+    text-shadow: 2px 2px lightblue;
+    color: black;
 }
 
 @media (hover: hover) {
@@ -118,13 +134,14 @@ nav a:first-of-type {
 
 @media (min-width: 1024px) {
   body {
-    display: flex;
+    /*display: flex;*/
     place-items: center;
   }
 
   #app {
     display: grid;
-    grid-template-columns: 1fr 1fr;
+    /*grid-template-columns: 1fr 1fr;*/
+    grid-template-columns: auto;
     padding: 0 2rem;
   }
 

@@ -8,7 +8,8 @@ import SupportIcon from './icons/IconSupport.vue'
 </script>
 
 <template>
-  [aca puedo poner otra cosa]
+<h3>Último llamado:</h3>
+  <h1 id="ultimo_llamado">{{ultimo_llamado_piso}}</h1>
 <!--   <WelcomeItem>
     <template #icon>
       <DocumentationIcon />
@@ -83,3 +84,16 @@ import SupportIcon from './icons/IconSupport.vue'
     <a target="_blank" href="https://vuejs.org/sponsor/">becoming a sponsor</a>.
   </WelcomeItem> -->
 </template>
+
+<script>
+export default { 
+    data(){
+        return {
+            ultimo_llamado_piso: ''
+        }
+    },
+
+}
+
+
+</script>

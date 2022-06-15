@@ -6,16 +6,16 @@ import { mapGetters } from 'vuex'
 <template>
 	<div class="row">
 		
-	    <div class="col-sm-6 col-md-6 col-lg-6">
+	    <div class="col-sm-8 col-md-8 col-lg-8">
 		Ultimos llamados..
 		<listallamados>
 			<ul>
-				<li v-for="item in arreglo_llamados" v-text="item.nuevo+'  ' +item.timestamp + ' ' + item.paciente+' (Consultorio: ' +item.consultorio+' Piso: '+item.piso+')' " v-bind:class = "(item.nuevo==1)?'blink-text':''"
-				 v-on:click="di('hola')"></li>
+				<li v-for="item in arreglo_llamados" v-text="item.timestamp + ' ' + item.paciente+' (Consultorio: ' +item.consultorio+' Piso: '+item.piso+')' " v-bind:class = "(item.nuevo==1)?'blink-text':''"
+				 :data-nuevo=item.nuevo ></li>
 			</ul>
 		</listallamados>
 		</div>
-	    <div class="col-sm-6 col-md-6 col-lg-6">
+	    <div class="col-sm-4 col-md-4 col-lg-4">
 			Proximos llamados..
 			<listallamados>
 				<ul>
@@ -41,7 +41,7 @@ export default {
 	computed: {
 		...mapGetters({
 		  // listaLlamados : "getLista"
-		})
+		}),
 	},
 	methods: {
 		async setEmpresa(){
@@ -55,10 +55,29 @@ export default {
 			console.log(texto)
 			    speechSynthesis.speak(new SpeechSynthesisUtterance("Lo llaman por consultorio 3"));
 		},
+		shouldIPlaySound: function(){
+			console.log(this.arreglo_llamados)
+			// arreglo_llamados.filter( function(elemento) {
+			// 	console.log(elemento )
+			// 	console.log("unacosa")
+			// } );
+		},
 		playSound: function(){
-			var audio = new Audio('audio_file.mp3');
+			console.log("soundeandoooooo call")
+			var audio = new Audio('bell.wav');
 			audio.play();
-			},
+		},
+		cargar_pacientes_llamados: function(response) {
+
+			this.arreglo_llamados = response;
+			let letsplay = this.arreglo_llamados.filter( function(elemento) {
+				if ( elemento.nuevo ==1 ) return true;
+			} );
+			console.log(letsplay.length)
+			if (letsplay.length) this.playSound();
+			return true
+		},
+
 		async getListaPacientesEspera(){
 			 // axios.get('http://10.1.0.4/ws/listaPacientes')
 			 axios.get('http://10.1.0.4/sgpc/HTML/ws/ws_interno.php?operacion=listarPacientesEspera')
@@ -67,7 +86,8 @@ export default {
 		async getListaPacientesLlamados(){
 			 // axios.get('http://10.1.0.4/ws/listaPacientes')
 			 axios.get('http://10.1.0.4/sgpc/HTML/ws/ws_interno.php?operacion=listarPacientesLlamados&p=2')
-            .then(response => (this.arreglo_llamados = response.data ))
+            .then(response => ( this.cargar_pacientes_llamados( response.data) ))
+            // .then(response => (this.arreglo_llamados = response.data ))
             // .then(response => console.log(response.data )  )
 		},
 	},
@@ -75,8 +95,9 @@ export default {
 		// this.setEmpresa()
 		this.getListaPacientesEspera();
 		this.getListaPacientesLlamados();
+		this.shouldIPlaySound();
+
 		// console.log(this.$router)
-		// // this.setEmpresa()
 		// // this.setEmpresa()
 		// // this.setEmpresa()
 	}

@@ -6,7 +6,6 @@ import "bootstrap-vue-3/dist/bootstrap-vue-3.css"
 import router from './router'
 import store from './store'
 
-
 const app = createApp(App)
 
 app.use(router)
@@ -14,3 +13,5 @@ app.use(store)
 app.use(BootstrapVue3)
 
 app.mount('#app')
+
+
